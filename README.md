@@ -1,2 +1,2 @@
-# meu projeto
-Primeiro repositorio
+# projeto
+Primeiro estudando
