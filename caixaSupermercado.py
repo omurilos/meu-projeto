@@ -139,16 +139,16 @@ class JanelaLogin:
         self.root = Tk()
         self.root.title('Login')
 
-        Label(self.root, text='Usuário').grid(row=0, column=0)
+        Label(self.root, text='Usuário').grid(row=0, column=0, padx=40, pady=20)
         self.login = Entry(self.root)
-        self.login.grid(row=0, column=1)
+        self.login.grid(row=0, column=1, padx=20, pady=20)
 
-        Label(self.root, text='Senha').grid(row=1, column=0)
+        Label(self.root, text='Senha').grid(row=1, column=0, padx=40, pady=20 )
         self.senha = Entry(self.root, show='*')
-        self.senha.grid(row=1, column=1)
+        self.senha.grid(row=1, column=1, padx=20, pady=20)
 
-        Button(self.root, text='Login',
-               command=self.verificar_login).grid(row=2, column=0, columnspan=2)
+        Button(self.root, text='ENTRAR',
+               command=self.verificar_login).grid(row=3, column=0, columnspan=2, pady=20)
 
         self.root.mainloop()
 
