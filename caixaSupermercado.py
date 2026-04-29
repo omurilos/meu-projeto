@@ -9,7 +9,7 @@ def conectar():
         host="localhost",
         user="root",
         password="",
-        db="erp",
+        db="agro_estoque",
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -24,13 +24,13 @@ class MenuSistema:
         Label(self.root, text="MENU PRINCIPAL").pack(pady=10)
 
         Button(self.root, text="Cadastrar Produto",
-               width=20, command=self.cadastrar).pack(pady=5)
+               width=20, command=self.cadastrar).pack(padx=60, pady=30)
 
         Button(self.root, text="Visualizar Estoque",
-               width=20, command=self.visualizar).pack(pady=5)
+               width=20, command=self.visualizar).pack(padx=60, pady=30)
 
         Button(self.root, text="Excluir Produto",
-               width=20, command=self.excluir).pack(pady=5)
+               width=20, command=self.excluir).pack(padx=60, pady=30)
         
     def excluir(self):
         excluirProduto(self.root)
@@ -41,7 +41,9 @@ class MenuSistema:
     def visualizar(self):
         visualizarProduto(self.root)
 
+
 class visualizarProduto:
+
 
 
     def __init__(self, root_pai):
@@ -60,7 +62,7 @@ class visualizarProduto:
             con = conectar()
             cursor = con.cursor()
 
-            cursor.execute("SELECT * FROM produtos")
+            cursor.execute("SELECT id, nome, preco, quantidade FROM produtos")
             produtos = cursor.fetchall()
 
         except Exception as e:
@@ -70,10 +72,14 @@ class visualizarProduto:
         if len(produtos) == 0:
             self.lista.insert(END, "Nenhum produto encontrado")
             return
+        
+        
 
         for produto in produtos:
-            texto = f"ID: {produto[0]} | Nome: {produto[1]} | Preço: {produto[2]}"
+            texto = f"ID: {produto['id']}  |  Nome: {produto['nome']}  |  Preço: {produto['preco']}  |  quantidade: {produto['quantidade']}"
+            
             self.lista.insert(END, texto)
+       
        
 
 class excluirProduto:
@@ -92,16 +98,21 @@ class excluirProduto:
        
        
     def excluir(self):
-        produto = self.nome.get()
+        produtos = self.nome.get()
 
         con = conectar()
         cursor = con.cursor()
 
         sql = "DELETE FROM produtos WHERE nome = %s"
-        cursor.execute(sql, (produto,))
+        cursor.execute(sql, (produtos,))
+
         con.commit()
 
-        messagebox.showinfo("Sucesso", "Produto excluido")
+        if cursor.rowcount == 0:
+            messagebox.showwarning('produto não encontrado')
+        else:
+            messagebox.show('Produto excluido')
+
         self.janela.destroy()
 
 
@@ -111,23 +122,40 @@ class TelaCadastro:
         self.janela = Toplevel(root_pai)
         self.janela.title("Cadastro de Produto")
 
-        Label(self.janela, text='Nome do produto').grid(row=0, column=0)
-
+        Label(self.janela, text='Nome do produto').grid(row=0, column=0, padx=50, pady=20)
         self.nome = Entry(self.janela)
-        self.nome.grid(row=0, column=1)
+        self.nome.grid(row=0, column=1, padx=50, pady=20)
+
+        Label(self.janela, text='Preço').grid(row=1, column=0, padx=50, pady=20)
+        self.preco = Entry(self.janela)
+        self.preco.grid(row=1, column=1, padx=50, pady=20)
+
+        Label(self.janela, text='Quantidade').grid(row=2, column=0, padx=50, pady=20)
+        self.quantidade = Entry(self.janela)
+        self.quantidade.grid(row=2, column=1, padx=50, pady=20)
 
         Button(self.janela, text="Salvar",
-               command=self.salvar).grid(row=1, column=0, columnspan=2)
+               command=self.salvar).grid(row=4, column=0, padx=30, pady=20)
+        Button(self.janela, text="Voltar",
+               command=self.voltar).grid(row=4, column=1, padx=30, pady=20)
+        
+    def voltar(self):
+        self.janela.destroy()
 
     def salvar(self):
-        produto = self.nome.get()
+        nome = self.nome.get()
+        preco = self.preco.get()
+        quantidade = self.quantidade.get()
 
         con = conectar()
         cursor = con.cursor()
 
-        sql = "INSERT INTO produtos (nome) VALUES (%s)"
-        cursor.execute(sql, (produto,))
+        sql = "INSERT INTO produtos (nome, preco, quantidade) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (nome, preco, quantidade))
         con.commit()
+
+        cursor.close()
+        con.close()
 
         messagebox.showinfo("Sucesso", "Produto cadastrado!")
         self.janela.destroy()
