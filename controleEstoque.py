@@ -77,6 +77,8 @@ class visualizarProduto:
 
         self.carregar_produtos()
 
+        self.tree.bind("<Double-1>", self.abrir_detalhes)
+
     def carregar_produtos(self):
         try:
             con = conectar()
@@ -97,8 +99,20 @@ class visualizarProduto:
                 produto["id"],
                 produto["nome"],
                 produto["preco"], 
-                produto["quantidade"]))   
+                produto["quantidade"])) 
 
+    def abrir_detalhes(self, event):
+        item_id = self.tree.selection()[0]
+        valores = self.tree.item(item_id, "values")
+        janelaDetalhes(self.janela, valores)  
+
+class janelaDetalhes:
+     
+     def __init__(self, root_pai, dados):
+        self.janela = Toplevel(root_pai)
+        self.janela.title(f"Detalhes: {dados[1]}")
+        self.janela.geometry("500x500")
+     
 class excluirProduto:
 
     def __init__(self, root_pai):
@@ -143,22 +157,40 @@ class TelaCadastro:
         self.janela.title("Cadastro de Produto")
         self.janela.geometry("500x500")
 
-        Label(self.janela, text='Nome do produto').grid(row=0, column=0, padx=50, pady=50)
+        Label(self.janela, text="Nome do produto").grid(row=0, column=0, padx=50, pady=10)
         self.nome = Entry(self.janela)
-        self.nome.grid(row=0, column=1, padx=50, pady=50)
+        self.nome.grid(row=0, column=1, padx=50, pady=10)
 
-        Label(self.janela, text='Preço').grid(row=1, column=0, padx=50, pady=20)
+        Label(self.janela, text="Preço").grid(row=1, column=0, padx=50, pady=10)
         self.preco = Entry(self.janela)
         self.preco.grid(row=1, column=1, padx=50, pady=50)
 
-        Label(self.janela, text='Quantidade').grid(row=2, column=0, padx=50, pady=50)
+        Label(self.janela, text="Quantidade").grid(row=2, column=0, padx=50, pady=10)
         self.quantidade = Entry(self.janela)
-        self.quantidade.grid(row=2, column=1, padx=50, pady=50)
+        self.quantidade.grid(row=2, column=1, padx=50, pady=10)
+
+        Label(self.janela, text="Validade").grid(row=3, column=0, pady=30)
+        self.validade = Entry(self.janela)
+        self.validade.grid(row=4, column=0)
+
+        Label(self.janela, text="Peso Produto").grid(row=3, column=1, pady=30 )
+        self.peso = Entry(self.janela)
+        self.peso.grid(row=4, column=1)
+
+        Label(self.janela, text="Entrada").grid(row=5, column=0, pady=20)
+        self.entrada = Entry(self.janela)
+        self.entrada.grid(row=6, column=0)
+
+        Label(self.janela, text="Saida").grid(row=5, column=1, pady=20)
+        self.saida = Entry(self.janela)
+        self.saida.grid(row=6, column=1)
+
+
 
         Button(self.janela, text="Salvar", bg="green", fg="white",
-               command=self.salvar).grid(row=4, column=0, padx=30, pady=20)
+               command=self.salvar).grid(row=7, column=0, padx=30, pady=23)
         Button(self.janela, text="Voltar", bg="red", fg="white",
-               command=self.janela.destroy).grid(row=4, column=1, padx=30, pady=20)
+               command=self.janela.destroy).grid(row=7, column=1, padx=30, pady=30)
      
     def salvar(self):
         nome = self.nome.get()
