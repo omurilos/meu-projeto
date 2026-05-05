@@ -108,11 +108,30 @@ class visualizarProduto:
 
 class janelaDetalhes:
      
+         
+
      def __init__(self, root_pai, dados):
         self.janela = Toplevel(root_pai)
         self.janela.title(f"Detalhes: {dados[1]}")
-        self.janela.geometry("500x500")
-     
+        self.janela.geometry("600x400")
+        self.tree = ttk.Treeview(self.janela,
+                         columns=("validade", "peso", "dataEntrada", "horaEntrada"),
+                         show="headings")
+        
+        self.tree.heading("validade", text="Validade")
+        self.tree.heading("peso", text="Peso")
+        self.tree.heading("dataEntrada", text="Data Entrada")
+        self.tree.heading("horaEntrada", text="Hora Entrada")
+
+        self.tree.column("validade", width=100)
+        self.tree.column("peso", width=50)
+        self.tree.column("dataEntrada", width=100)
+        self.tree.column("horaEntrada", width=50)
+
+        Label(self.janela, text="Detalhes").pack()
+
+        self.tree.pack(fill=BOTH, expand=True)
+
 class excluirProduto:
 
     def __init__(self, root_pai):
@@ -173,17 +192,17 @@ class TelaCadastro:
         self.validade = Entry(self.janela)
         self.validade.grid(row=4, column=0)
 
-        Label(self.janela, text="Peso Produto").grid(row=3, column=1, pady=30 )
+        Label(self.janela, text="Peso").grid(row=3, column=1, pady=30 )
         self.peso = Entry(self.janela)
         self.peso.grid(row=4, column=1)
 
-        Label(self.janela, text="Entrada").grid(row=5, column=0, pady=20)
-        self.entrada = Entry(self.janela)
-        self.entrada.grid(row=6, column=0)
+        Label(self.janela, text="Data da Entrada").grid(row=5, column=0, pady=20)
+        self.dataEntrada = Entry(self.janela)
+        self.dataEntrada.grid(row=6, column=0)
 
-        Label(self.janela, text="Saida").grid(row=5, column=1, pady=20)
-        self.saida = Entry(self.janela)
-        self.saida.grid(row=6, column=1)
+        Label(self.janela, text="Horário da Entrada").grid(row=5, column=1, pady=20)
+        self.horaEntrada = Entry(self.janela)
+        self.horaEntrada.grid(row=6, column=1)
 
 
 
@@ -196,12 +215,16 @@ class TelaCadastro:
         nome = self.nome.get()
         preco = self.preco.get()
         quantidade = self.quantidade.get()
+        validade = self.validade.get()
+        peso = self.peso.get()
+        dataEntrada = self.dataEntrada.get()
+        horaEntrada = self.horaEntrada.get()
 
         con = conectar()
         cursor = con.cursor()
 
-        sql = "INSERT INTO produtos (nome, preco, quantidade) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (nome, preco, quantidade))
+        sql = "INSERT INTO produtos (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql, (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada))
         con.commit()
 
         cursor.close()
