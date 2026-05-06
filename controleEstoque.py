@@ -50,18 +50,22 @@ class MenuSistema:
 
 
 class visualizarProduto:
+    
 
 
 
-    def __init__(self, root_pai):
+     def __init__(self, root_pai):
         self.janela = Toplevel(root_pai)
-        self.janela.title("Visualizar Produtos")
+        self.janela.title(f"Detalhes do Produto")
         self.janela.geometry("600x400")
+            
 
-        self.tree = ttk.Treeview(self.janela, 
-                        columns=("id","nome", "preco", "quantidade"), 
-                        show="headings")
-        
+
+
+        self.tree = ttk.Treeview(self.janela, selectmode= "browse",
+                            columns=("id","nome", "preco", "quantidade"), 
+                            show="headings")
+            
         self.tree.heading("id", text="id")
         self.tree.heading("nome", text="nome")
         self.tree.heading("preco", text="preco")
@@ -78,7 +82,7 @@ class visualizarProduto:
         self.carregar_produtos()
         self.tree.bind("<Double-1>", self.abrir_detalhes)
 
-    def carregar_produtos(self):
+     def carregar_produtos(self):
         try:
             con = conectar()
             cursor = con.cursor()
@@ -100,7 +104,7 @@ class visualizarProduto:
                 produto["preco"], 
                 produto["quantidade"]))
                 
-    def abrir_detalhes(self, event):
+     def abrir_detalhes(self, event):
         item_id = self.tree.selection()[0]
         valores = self.tree.item(item_id, "values")
         id_produto = valores[0]
@@ -143,10 +147,10 @@ class janelaDetalhes:
 
             if detalhes:
                self.tree.insert("", END, values=(
-                detalhes[0],
-                detalhes[1],
-                detalhes[2],
-                detalhes[3]))
+                detalhes["validade"],
+                detalhes["peso"],
+                detalhes["dataEntrada"],
+                detalhes["horaEntrada"]))
                
         except Exception as e:
             Label(self.janela, text=f"Erro: {e}").pack()
@@ -240,7 +244,7 @@ class TelaCadastro:
         peso = self.peso.get()
         dataEntrada= self.dataEntrada.get()
         horaEntrada= self.horaEntrada.get()
-        
+
         
         try:
           con = conectar()
