@@ -2,6 +2,7 @@ import pymysql
 from tkinter import *
 from tkinter import ttk 
 from tkinter import messagebox
+from datetime import datetime
 
 
 def conectar():
@@ -71,12 +72,10 @@ class visualizarProduto:
         self.tree.column("preco", width=100)
         self.tree.column("quantidade", width=100)
 
-        Label(self.janela, text="Lista de Produtos").pack()
-
+        Label(self.janela, text="Clique duplo para ver detalhes", fg="blue").pack()
         self.tree.pack(fill=BOTH, expand=True)
 
         self.carregar_produtos()
-
         self.tree.bind("<Double-1>", self.abrir_detalhes)
 
     def carregar_produtos(self):
@@ -84,9 +83,9 @@ class visualizarProduto:
             con = conectar()
             cursor = con.cursor()
 
-            cursor.execute("SELECT id, nome, preco, quantidade  FROM produtos")
+            cursor.execute("SELECT id, nome, preco, quantidade FROM produtos")
             produtos = cursor.fetchall()
-
+            con.close()
         except Exception as e:
             Label(self.janela, text=f"Erro: {e}").pack()
             return
@@ -99,21 +98,20 @@ class visualizarProduto:
                 produto["id"],
                 produto["nome"],
                 produto["preco"], 
-                produto["quantidade"])) 
-
+                produto["quantidade"]))
+                
     def abrir_detalhes(self, event):
         item_id = self.tree.selection()[0]
         valores = self.tree.item(item_id, "values")
-        janelaDetalhes(self.janela, valores)  
+        id_produto = valores[0]
+        janelaDetalhes(self.janela, id_produto)  
 
 class janelaDetalhes:
-     
-         
-
-     def __init__(self, root_pai, dados):
+     def __init__(self, root_pai, id_produto):
         self.janela = Toplevel(root_pai)
-        self.janela.title(f"Detalhes: {dados[1]}")
+        self.janela.title(f"Detalhes do Produto")
         self.janela.geometry("600x400")
+
         self.tree = ttk.Treeview(self.janela,
                          columns=("validade", "peso", "dataEntrada", "horaEntrada"),
                          show="headings")
@@ -126,11 +124,32 @@ class janelaDetalhes:
         self.tree.column("validade", width=100)
         self.tree.column("peso", width=50)
         self.tree.column("dataEntrada", width=100)
-        self.tree.column("horaEntrada", width=50)
-
-        Label(self.janela, text="Detalhes").pack()
+        self.tree.column("horaEntrada", width=100)
 
         self.tree.pack(fill=BOTH, expand=True)
+
+        self.carregar_dados_especificos(id_produto)
+
+     def carregar_dados_especificos(self, id_produto):
+        try:
+            con = conectar()
+            cursor = con.cursor()
+            
+            query = "SELECT validade, peso, dataEntrada, horaEntrada  FROM produtos WHERE id = %s"
+            cursor.execute(query, (id_produto,))
+
+            detalhes = cursor.fetchone()
+            con.close()
+
+            if detalhes:
+               self.tree.insert("", END, values=(
+                detalhes[0],
+                detalhes[1],
+                detalhes[2],
+                detalhes[3]))
+               
+        except Exception as e:
+            Label(self.janela, text=f"Erro: {e}").pack()
 
 class excluirProduto:
 
@@ -139,10 +158,10 @@ class excluirProduto:
        self.janela.title("Ecluir Produto")
        self.janela.geometry("500x400")
     
-       Label(self.janela, text='Nome do produto').grid(row=0, column=0, padx=60, pady=100)
+       Label(self.janela, text='id do produto').grid(row=0, column=0, padx=60, pady=100)
 
-       self.nome = Entry(self.janela)
-       self.nome.grid(row=0, column=1, padx=60, pady=100)
+       self.id = Entry(self.janela)
+       self.id.grid(row=0, column=1, padx=60, pady=100)
 
        Button(self.janela, text="Excluir", bg="red", fg="white",
                command=self.excluir).grid(row=3, column=0, pady=20)
@@ -151,17 +170,17 @@ class excluirProduto:
               command=self.janela.destroy).grid(row=3, column=1, pady=20)
 
     def excluir(self):
-        produtos = self.nome.get()
+        produtos = self.id.get()
 
         con = conectar()
         cursor = con.cursor()
 
-        sql = "DELETE FROM produtos WHERE nome = %s"
+        sql = "DELETE FROM produtos WHERE id = %s"
         cursor.execute(sql, (produtos,))
 
         con.commit()
 
-        if cursor.rowcount == 0:
+        if cursor.rowcount == "":
             messagebox.showwarning("Aviso, Produto não encontrado")
         else:
             messagebox.showinfo("Sucesso, Produto excluido")
@@ -188,7 +207,8 @@ class TelaCadastro:
         self.quantidade = Entry(self.janela)
         self.quantidade.grid(row=2, column=1, padx=50, pady=10)
 
-        Label(self.janela, text="Validade").grid(row=3, column=0, pady=30)
+        Label(self.janela, text="Validade"
+                              "(AAAA-MM-DD)").grid(row=3, column=0, pady=30)
         self.validade = Entry(self.janela)
         self.validade.grid(row=4, column=0)
 
@@ -196,7 +216,8 @@ class TelaCadastro:
         self.peso = Entry(self.janela)
         self.peso.grid(row=4, column=1)
 
-        Label(self.janela, text="Data da Entrada").grid(row=5, column=0, pady=20)
+        Label(self.janela, text="Data da Entrada"
+                                 "(AAAA-MM-DD)").grid(row=5, column=0, pady=20)
         self.dataEntrada = Entry(self.janela)
         self.dataEntrada.grid(row=6, column=0)
 
@@ -217,21 +238,25 @@ class TelaCadastro:
         quantidade = self.quantidade.get()
         validade = self.validade.get()
         peso = self.peso.get()
-        dataEntrada = self.dataEntrada.get()
-        horaEntrada = self.horaEntrada.get()
+        dataEntrada= self.dataEntrada.get()
+        horaEntrada= self.horaEntrada.get()
+        
+        
+        try:
+          con = conectar()
+          cursor = con.cursor()
 
-        con = conectar()
-        cursor = con.cursor()
+          query = "INSERT INTO produtos (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+          cursor.execute(query, (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada))
+          con.commit()
 
-        sql = "INSERT INTO produtos (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(sql, (nome, preco, quantidade, validade, peso, dataEntrada, horaEntrada))
-        con.commit()
+          cursor.close()
+          con.close()
 
-        cursor.close()
-        con.close()
-
-        messagebox.showinfo("Sucesso", "Produto cadastrado!")
-        self.janela.destroy()
+          messagebox.showinfo("Sucesso", "Produto cadastrado!")
+          self.janela.destroy()
+        except Exception as e:
+            messagebox.showerror(f"Erro: {e}")
 
 
 class JanelaLogin:
