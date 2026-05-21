@@ -3,8 +3,8 @@ from tkinter import *
 from tkinter import ttk 
 from tkinter import messagebox
 
-def conectar():
-     return pymysql.connect(
+
+conexao = pymysql.connect(
                 host="localhost",
                 user="root",
                 password="",
@@ -16,57 +16,107 @@ def conectar():
 
 class telaCadastro:
  
-  def cadastrar(pai):
-         nome = pai.nome.get()
-         idade = pai.idade.get()
-         email = pai.email.get()
-         senha = pai.senha.get()
-         telefone = pai.telefone.get()
+   
+    def __init__(self):
+        self.pai = Tk()
+        self.pai.title("Tela Inicio")
+        self.pai.geometry('550x250')
+        self.pai.configure(bg='#2c3e50')
+
+        Label(self.pai, text='CADASTRO', bg="#CA6913", fg='white').grid(row=0, column=2, columnspan=2, pady=15)
+                    
+                    
+        Label(self.pai, text='Nome', bg="#E67E22", fg='white').grid(row=3, padx=15, pady=5 )
+        self.nome = Entry(self.pai, width=30)
+        self.nome.grid(row=3, column=3)
+
+        Label(self.pai, text='Data de Nascimento', bg="#E67E22", fg='white').grid(row=4, padx=15, pady=5)
+        self.idade = Entry(self.pai, width=30)
+        self.idade.grid(row=4, column=3)
+
+        Label(self.pai, text='E-mail', bg="#E67E22", fg='white').grid(row=5, padx=15, pady=5)
+        self.email = Entry(self.pai, width=30)
+        self.email.grid(row=5, column=3)
+
+        Label(self.pai, text='Senha', bg="#E67E22", fg='white').grid(row=6, padx=15, pady=5)
+        self.senha = Entry(self.pai, width=30, show='*')
+        self.senha.grid(row=6, column=3)
 
 
-         try:
-               with conexao.cursor() as cursor:
-                  sql = 'insert into usuarios(nome, idade, email, senha, telefone) values (%s, %s, %s, %s, %s)'
-                  cursor.execute(sql,(nome, idade, email, senha, telefone))
-                  conexao.commit()
-                  messagebox.showinfo("Sucesso, Você foi cadastrado")
-         except Exception as e:
-            print(f'Não foi possivel{e}') 
-
-
-  
-   pai = Tk()
-   pai.title('Inicio')
-   pai.geometry('500x250')
-   pai.configure(bg='#2c3e50')
-
-   Label(pai, text='CADASTRO', bg="#CA6913", fg='white').grid(row=0, column=3, columnspan=2, pady=15)
-            
-            
-   Label(pai, text='Nome', bg="#E67E22", fg='white').grid(row=3, padx=15, pady=5 )
-   nome = Entry(pai, width=30).grid(row=3, column=3)
-
-   Label(pai, text='Idade', bg="#E67E22", fg='white').grid(row=4, padx=15, pady=5)
-   idade = Entry(pai, width=30).grid(row=4, column=3)
-
-   Label(pai, text='E-mail', bg="#E67E22", fg='white').grid(row=5, padx=15, pady=5)
-   email = Entry(pai, width=30).grid(row=5, column=3)
-
-   Label(pai, text='Senha', bg="#E67E22", fg='white').grid(row=6, padx=15, pady=5)
-   senha = Entry(pai, width=30, show='*').grid(row=6, column=3)
-   Label(pai, text='Telefone', bg="#E67E22", fg='white').grid(row=7, padx=15, pady=5)
-   telefone = Entry(pai, width=30).grid(row=7, column=3)
+        Label(self.pai, text='Telefone', bg="#E67E22", fg='white').grid(row=7, padx=15, pady=5)
+        self.telefone = Entry(self.pai, width=30)
+        self.telefone.grid(row=7, column=3)
 
             
 
-   Button(pai, text='CADASTRAR', width=25, fg='white', bg="#006912", command=lambda: cadastrar(pai)).grid(row=4, column=4, padx=20)
+        Button(self.pai, text='CADASTRAR', width=25, fg='white', bg="#006912", command=self.cadastrar).grid(row=4, column=4, padx=20)
 
-   Label(pai, text='Já possui um cadastro?', bg='#2c3e50', fg="#FFFFFF" ).grid(row=6, column=4)
-   Button(pai, text='ENTRAR', width=25, fg='white', bg="#0e4985").grid(row=7, column=4, padx=20)
+        Label(self.pai, text='Já possui um cadastro?', bg='#2c3e50', fg="#FFFFFF" ).grid(row=6, column=4)
+        Button(self.pai, text='LOGIN', width=25, fg='white', bg="#0e4985", command=self.entrar).grid(row=7, column=4, padx=20)
 
-   pai.mainloop()
+        self.pai.mainloop()
 
+    def cadastrar (self):
+        nome = self.nome.get()
+        idade = self.idade.get()
+        email = self.email.get()
+        senha = self.senha.get()
+        telefone = self.telefone.get()
 
+        try:
+            with conexao.cursor() as cursor:
+                sql = 'INSERT INTO usuarios (nome, idade, email, senha, telefone) VALUES (%s, %s, %s, %s, %s)'
+                cursor.execute(sql, (nome, idade, email, senha, telefone))
+                conexao.commit()
+                messagebox.showinfo("Sucesso", "Usuario cadastrado!")
+                
+        except Exception as e:
+            print(f'Não foi possível cadastrar: {e}')
+
+    def entrar(self):
+       telaentrada(self.pai)
+        
+class telaentrada:  
+
+    def __init__(self, root_pai):
+        self.entra = Toplevel(root_pai)
+        self.entra.title('Tela do Usuario')
+        self.entra.configure(bg='#2c3e50')
+        self.entra.geometry('550x250')
+
+        Label(self.entra, text='LOGIN', bg='#E67E22', fg='white').grid(row=0, column=2)
+
+        Label(self.entra, text='email',bg='#E67E22', fg='white').grid(row=1, column=0)
+        self.email = Entry(self.entra, width=30)
+        self.email.grid(row=1, column=1)
+
+        Label(self.entra, text='senha',bg='#E67E22', fg='white').grid(row=2, column=0)
+        self.senha = Entry(self.entra, width=30, show='*')
+        self.senha.grid(row=2, column=1)
+
+        Button(self.entra, text='ENTRAR', width=25, fg='white', bg="#0e4985", command=self.logar).grid(row=3, column=2)
+
+    def logar(self):
+        email = self.email.get()
+        senha = self.senha.get()
+
+        try:
+            with conexao.cursor() as cursor:
+                sql = 'select * from usuarios where email = %s and senha = %s'
+                cursor.execute(sql, (email, senha))
+
+                usuario_encontrado = cursor.fetchone()
+
+                if usuario_encontrado:
+                    messagebox.showinfo('Logado')
+                    self.entra.destroy()
+                else:
+                    messagebox.showerror('Erro', 'E-mail ou senha incorretos.')
+
+        except Exception as e:
+            print(f'ERRO NO {e}')
+
+telaCadastro()
 
 
 
