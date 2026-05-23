@@ -82,39 +82,81 @@ class telaentrada:
         self.entra = Toplevel(root_pai)
         self.entra.title('Tela do Usuario')
         self.entra.configure(bg='#2c3e50')
-        self.entra.geometry('550x250')
+        self.entra.geometry('430x250')
 
-        Label(self.entra, text='LOGIN', bg='#E67E22', fg='white').grid(row=0, column=2)
+        Label(self.entra, text='LOGIN', bg='#E67E22', fg='white').grid(row=0, column=0, columnspan=2, padx= 20, pady=20)
 
-        Label(self.entra, text='email',bg='#E67E22', fg='white').grid(row=1, column=0)
-        self.email = Entry(self.entra, width=30)
+        Label(self.entra, text='Email',bg='#2c3e50', fg='white').grid(row=1, column=0, pady=30)
+        self.email = Entry(self.entra, width=25)
         self.email.grid(row=1, column=1)
 
-        Label(self.entra, text='senha',bg='#E67E22', fg='white').grid(row=2, column=0)
-        self.senha = Entry(self.entra, width=30, show='*')
+        Label(self.entra, text='Senha', bg='#2c3e50', fg='white').grid(row=2, column=0)
+        self.senha = Entry(self.entra, width=25, show='*')
         self.senha.grid(row=2, column=1)
 
-        Button(self.entra, text='ENTRAR', width=25, fg='white', bg="#0e4985", command=self.logar).grid(row=3, column=2)
+        Button(self.entra, text='ENTRAR', width=20, fg='white', bg="#0e4985", command=self.logar).grid(row=3, column=0, padx=30, pady=40)
+        Button(self.entra, text='VOLTAR', width=20, bg='red', fg='white', command=self.voltar).grid(row=3, column=1)
+
+    def voltar(self):
+        self.entra.destroy()
 
     def logar(self):
         email = self.email.get()
         senha = self.senha.get()
-
+        
         try:
-            with conexao.cursor() as cursor:
-                sql = 'select * from usuarios where email = %s and senha = %s'
+            with conexao.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'select * from usuarios where email = %s and senha = %s '
                 cursor.execute(sql, (email, senha))
 
                 usuario_encontrado = cursor.fetchone()
-
+                    
                 if usuario_encontrado:
-                    messagebox.showinfo('Logado')
-                    self.entra.destroy()
-                else:
-                    messagebox.showerror('Erro', 'E-mail ou senha incorretos.')
+                    tipo = usuario_encontrado['tipo_usuario']   
 
+                   
+                
+                    if tipo == 'Comum':
+                        self.comum()
+                        messagebox.showinfo('Logado', 'Bem-vindo Usuário Comum!')
+                        self.entra.destroy()
+
+                    elif tipo == 'Admin':
+                        self.admin()
+                        messagebox.showinfo('Logado', 'Bem-vindo Administrador!')
+                        self.entra.destroy()
+                
+                
+                else:
+                    messagebox.showerror('Erro', 'E-mail ou senha inválidos.')
+                        
         except Exception as e:
-            print(f'ERRO NO {e}')
+            print(f'ERRO NO LOGIN: {e}')
+
+        
+        def comum(self):
+            telaComum(self.pai)
+
+        def admin(self):
+            telaAdmin(self.pai)
+
+
+class telaComum:  
+
+    def __init__(self, root_pai):
+        self.entra = Toplevel(root_pai)
+        self.entra.title('Tela Inicio')
+        self.entra.configure(bg='#2c3e50')
+        self.entra.geometry('430x250')
+                            
+class telaAdmin:  
+
+    def __init__(self, root_pai):
+        self.entra = Toplevel(root_pai)
+        self.entra.title('Tela Admin')
+        self.entra.configure(bg='#2c3e50')
+        self.entra.geometry('430x250')              
+       
 
 telaCadastro()
 
