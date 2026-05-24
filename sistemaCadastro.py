@@ -113,19 +113,16 @@ class telaentrada:
                     
                 if usuario_encontrado:
                     tipo = usuario_encontrado['tipo_usuario']   
-
-                   
                 
                     if tipo == 'Comum':
+                        self.entra.withdraw()
+                        messagebox.showinfo('Logado', 'Bem-vindo Usuário!')
                         self.comum()
-                        messagebox.showinfo('Logado', 'Bem-vindo Usuário Comum!')
-                        self.entra.destroy()
 
                     elif tipo == 'Admin':
-                        self.admin()
+                        self.entra.withdraw()
                         messagebox.showinfo('Logado', 'Bem-vindo Administrador!')
-                        self.entra.destroy()
-                
+                        self.admin()
                 
                 else:
                     messagebox.showerror('Erro', 'E-mail ou senha inválidos.')
@@ -134,11 +131,11 @@ class telaentrada:
             print(f'ERRO NO LOGIN: {e}')
 
         
-        def comum(self):
-            telaComum(self.pai)
+    def comum(self):
+            telaComum(self.entra)
 
-        def admin(self):
-            telaAdmin(self.pai)
+    def admin(self):
+            telaAdmin(self.entra)
 
 
 class telaComum:  
@@ -147,17 +144,127 @@ class telaComum:
         self.entra = Toplevel(root_pai)
         self.entra.title('Tela Inicio')
         self.entra.configure(bg='#2c3e50')
-        self.entra.geometry('430x250')
+        self.entra.geometry('550x250')
                             
 class telaAdmin:  
 
     def __init__(self, root_pai):
-        self.entra = Toplevel(root_pai)
-        self.entra.title('Tela Admin')
-        self.entra.configure(bg='#2c3e50')
-        self.entra.geometry('430x250')              
-       
+        self.admin = Toplevel(root_pai)
+        self.admin.title('Tela Admin')
+        self.admin.configure(bg='#2c3e50')
+        self.admin.geometry('700x600') 
 
+        frame_pesquisa = Frame(self.admin, bg='#2c3e50' )
+        frame_pesquisa.pack(fill=X, padx=15,pady=15)
+
+        Label(frame_pesquisa, text='PESQUISAR POR ID', bg='#2c3e50', fg='white', font=('Arial', 10, 'bold')).grid(row=0, column=0, padx=5)
+        
+        self.input_pesquisa = Entry(frame_pesquisa, width=10)
+        self.input_pesquisa.grid(row=0, column=1, padx=5)
+
+        btn_pesquisar = Button(frame_pesquisa, text='PESQUISAR', command=self.pesquisar, bg='#0e4985', fg='white')
+        btn_pesquisar.grid(row=0, column=2, padx=5)
+
+        frame_tabela = LabelFrame(self.admin, text="LISTA DE USUÁRIOS ", fg="green", bg='#2c3e50', font=('Arial', 10, 'bold'), padx=10, pady=10)
+        frame_tabela.pack(fill=BOTH, expand=True, pady=10)
+
+        colunas = ("id", "nome", 'idade', "email", "senha", 'telefone' )
+
+        self.tabela = ttk.Treeview(frame_tabela, columns=colunas, show="headings")
+
+
+        self.tabela.heading("id", text="Id")
+        self.tabela.heading("nome", text="Nome")
+        self.tabela.heading("idade", text="Idade")
+        self.tabela.heading("email", text="Email")
+        self.tabela.heading("senha", text="Senha")
+        self.tabela.heading("telefone", text="Telefone")
+
+        self.tabela.column("id", width=40, anchor="center")
+        self.tabela.column("nome", width=120)
+        self.tabela.column("idade", width=60)
+        self.tabela.column("email", width=150)
+        self.tabela.column("senha", width=90)
+        self.tabela.column("telefone", width=110)
+
+        scroll_y = Scrollbar(frame_tabela, orient="vertical", command=self.tabela.yview)
+        self.tabela.configure(yscrollcommand=scroll_y.set)
+
+        self.tabela.pack(side=LEFT, fill=BOTH, expand=True)
+        scroll_y.pack(side=RIGHT, fill=Y)          
+       
+        self.tabela.bind("<Double-1>", self.abrir_detalhes)
+        self.carregar_info()
+
+    def abrir_detalhes(self, event):
+        janeladetalhes(self.tabela)
+
+
+
+    def pesquisar(self):
+        id_pesquisado = self.input_pesquisa.get()
+
+        if not id_pesquisado:
+            self.carregar_info()
+            return
+
+        try:
+            with conexao.cursor() as cursor:
+                sql = 'SELECT id, nome, idade, email, senha, telefone FROM usuarios WHERE id = %s'
+                cursor.execute(sql, (id_pesquisado))
+
+                usuario = cursor.fetchone()
+
+                for item in self.tabela.get_children():
+                    self.tabela.delete(item)
+
+                if usuario:
+                    self.tabela.insert("", "end", values=(
+                        usuario['id'],
+                        usuario['nome'],
+                        usuario['idade'],
+                        usuario['email'],
+                        usuario['senha'],
+                        usuario['telefone']
+                    ))
+                else:
+                    messagebox.showwarning("Aviso", "Nenhum usuário encontrado com este ID.")
+
+        except Exception as e:
+            print(f'ERRO AO PESQUISAR: {e}')
+
+    def carregar_info(self):
+
+       
+        for item in self.tabela.get_children():
+            self.tabela.delete(item) 
+
+        try:
+            with conexao.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql = 'SELECT id, nome, idade, email, senha, telefone FROM usuarios'
+                cursor.execute(sql) 
+
+                todos_usuarios = cursor.fetchall()
+
+                for usuario in todos_usuarios:
+                    self.tabela.insert("", "end", values=(
+                        usuario['id'],
+                        usuario['nome'],
+                        usuario['idade'],
+                        usuario['email'],
+                        usuario['senha'],
+                        usuario['telefone']
+                    ))
+
+        except Exception as e:
+            print(f'ERRO AO CARREGAR DADOS NA TABELA: {e}')
+
+class janeladetalhes:
+    def __init__(self, root_pai):
+        self.admin = Toplevel(root_pai)
+        self.admin.title('Detalhes e Editar')
+        self.admin.configure(bg='#2c3e50')
+        self.admin.geometry('700x600')
 telaCadastro()
 
 
