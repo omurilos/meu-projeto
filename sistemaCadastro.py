@@ -152,7 +152,7 @@ class telaAdmin:
         self.admin = Toplevel(root_pai)
         self.admin.title('Tela Admin')
         self.admin.configure(bg='#2c3e50')
-        self.admin.geometry('700x600') 
+        self.admin.geometry('750x500') 
 
         frame_pesquisa = Frame(self.admin, bg='#2c3e50' )
         frame_pesquisa.pack(fill=X, padx=15,pady=15)
@@ -199,8 +199,13 @@ class telaAdmin:
         self.carregar_info()
 
     def abrir_detalhes(self, event):
-        janeladetalhes(self.tabela)
+        user_selecionado = self.tabela.selection()
+        if not user_selecionado:
+            return
+        
+        valores_da_linha = self.tabela.item(user_selecionado[0], "values")
 
+        janelaAltera(self.admin, valores_da_linha, self.carregar_info)
 
 
     def pesquisar(self):
@@ -214,7 +219,6 @@ class telaAdmin:
             with conexao.cursor() as cursor:
                 sql = 'SELECT id, nome, idade, email, senha, telefone, data_cadastro FROM usuarios WHERE id = %s'
                 cursor.execute(sql, (id))
-
                 usuario = cursor.fetchone()
 
                 for item in self.tabela.get_children():
@@ -237,8 +241,6 @@ class telaAdmin:
             print(f'ERRO AO PESQUISAR: {e}')
 
     def carregar_info(self):
-
-       
         for item in self.tabela.get_children():
             self.tabela.delete(item) 
 
@@ -263,111 +265,68 @@ class telaAdmin:
         except Exception as e:
             print(f'ERRO AO CARREGAR DADOS NA TABELA: {e}')
 
-class janeladetalhes:
-    def __init__(self, root_pai):
-        self.admin = Toplevel(root_pai)
-        self.admin.title('Editar')
-        self.admin.configure(bg='#2c3e50')
-        self.admin.geometry('850x200')
+class janelaAltera:
+    
+     def __init__(self, root_pai, valores, funcao_atualizar):
+        self.janela = Toplevel(root_pai)
+        self.janela.title('Editar Usuário')
+        self.janela.configure(bg='#2c3e50')
+        self.janela.geometry('700x180')
+        
+       
+        self.janela.grab_set()
 
-        frame_edita = Frame(self.admin, bg='#2c3e50' )
-        frame_edita.pack(fill=X, padx=15,pady=15)
+        self.funcao_atualizar = funcao_atualizar
+        self.id_usuario_selecionado = valores[0] 
 
-        Label(frame_edita, text='EDITAR', bg="#CA6913", fg='white').grid(row=0, column=2, columnspan=2, pady=15)
+        frame_edita = Frame(self.janela, bg='#2c3e50')
+        frame_edita.pack(fill=X, padx=15, pady=15)
+
+        Label(frame_edita, text=f'EDITANDO ID: {self.id_usuario_selecionado}', bg="#CA6913", fg='white', font=('Arial', 10, 'bold')).grid(row=0, column=0, columnspan=6, pady=10, sticky="we")
                     
-                    
-        Label(frame_edita, text='Nome', bg='#2c3e50', fg='white').grid(row=3, column=0, padx=15 )
-        self.input_nome = Entry(frame_edita, width=30)
-        self.input_nome.grid(row=3, column=1)
+        Label(frame_edita, text='Nome', bg='#2c3e50', fg='white').grid(row=3, column=0, padx=5, pady=5)
+        self.input_nome = Entry(frame_edita, width=25)
+        self.input_nome.grid(row=3, column=1, pady=5)
+        self.input_nome.insert(0, valores[1])
 
-        Label(frame_edita, text='Data de Nascimento', bg='#2c3e50', fg='white').grid(row=3, column=2, padx=15)
-        self.input_idade = Entry(frame_edita, width=30)
-        self.input_idade.grid(row=3, column=3)
+        Label(frame_edita, text='Idade/Nasc', bg='#2c3e50', fg='white').grid(row=3, column=2, padx=5, pady=5)
+        self.input_idade = Entry(frame_edita, width=25)
+        self.input_idade.grid(row=3, column=3, pady=5)
+        self.input_idade.insert(0, valores[2])
 
-        Label(frame_edita, text='E-mail',bg='#2c3e50', fg='white').grid(row=3, column=4 )
-        self.input_email = Entry(frame_edita, width=30)
-        self.input_email.grid(row=3, column=5)
+        Label(frame_edita, text='E-mail', bg='#2c3e50', fg='white').grid(row=3, column=4, padx=5, pady=5)
+        self.input_email = Entry(frame_edita, width=25)
+        self.input_email.grid(row=3, column=5, pady=5)
+        self.input_email.insert(0, valores[3])
 
-        Label(frame_edita, text='Senha',bg='#2c3e50', fg='white').grid(row=4, column=0 )
-        self.input_senha = Entry(frame_edita, width=30, show='*')
-        self.input_senha.grid(row=4, column=1)
+        Label(frame_edita, text='Senha', bg='#2c3e50', fg='white').grid(row=4, column=0, padx=5, pady=5)
+        self.input_senha = Entry(frame_edita, width=25)
+        self.input_senha.grid(row=4, column=1, pady=5)
+        self.input_senha.insert(0, valores[4])
 
+        Label(frame_edita, text='Telefone', bg='#2c3e50', fg='white').grid(row=4, column=2, padx=5, pady=5)
+        self.input_telefone = Entry(frame_edita, width=25)
+        self.input_telefone.grid(row=4, column=3, pady=5)
+        self.input_telefone.insert(0, valores[5])
 
-        Label(frame_edita, text='Telefone', bg='#2c3e50', fg='white').grid(row=4, column=2 )
-        self.input_telefone = Entry(frame_edita, width=30)
-        self.input_telefone.grid(row=4, column=3)
+        Label(frame_edita, text='Data/Hora', bg='#2c3e50', fg='white').grid(row=4, column=4, padx=5, pady=5)
+        self.input_data = Entry(frame_edita, width=25)
+        self.input_data.grid(row=4, column=5, pady=5)
+        self.input_data.insert(0, valores[6])
 
         
-        Label(frame_edita, text='Data e Hora', bg='#2c3e50', fg='white').grid(row=4, column=4)
-        self.input_data = Entry(frame_edita, width=30)
-        self.input_data.grid(row=4, column=5)
+        btn_salvar = Button(frame_edita, text='SALVAR', command=self.salvar, bg='#0e4985', fg='white', width=12)
+        btn_salvar.grid(row=5, column=2, pady=15, sticky="e")
 
-        btn_salvar = Button(frame_edita, text='SALVAR', command=self.salvar, bg='#0e4985', fg='white')
-        btn_salvar.grid(row=5, column=2, columnspan=2, pady=15)
-
-        btn_voltar = Button(frame_edita, text='VOLTAR', command=self.voltar, bg='red', fg='white')
-        btn_voltar.grid(row=5, column=2, columnspan=2, pady=15)
+        btn_voltar = Button(frame_edita, text='VOLTAR', command=self.voltar, bg='red', fg='white', width=12)
+        btn_voltar.grid(row=5, column=3, pady=15, sticky="w")
+    
 
 
-        frame_tabela = LabelFrame(self.admin, text="INFORMAÇÕES ", fg="green", bg='#2c3e50', font=('Arial', 10, 'bold'), padx=10, pady=10)
-        frame_tabela.pack(fill=BOTH, expand=True, pady=10)
+     def voltar(self):
+        self.janela.destroy()
 
-        colunas = ("id", "nome", 'idade', "email", "senha", 'telefone', 'data_cadastro' )
-
-        self.tabela = ttk.Treeview(frame_tabela, columns=colunas, show="headings")
-
-
-        self.tabela.heading("id", text="Id")
-        self.tabela.heading("nome", text="Nome")
-        self.tabela.heading("idade", text="Idade")
-        self.tabela.heading("email", text="Email")
-        self.tabela.heading("senha", text="Senha")
-        self.tabela.heading("telefone", text="Telefone")
-        self.tabela.heading("data_cadastro", text="Data e Hora")
-
-        self.tabela.column("id", width=40, anchor="center")
-        self.tabela.column("nome", width=120)
-        self.tabela.column("idade", width=60)
-        self.tabela.column("email", width=150)
-        self.tabela.column("senha", width=90)
-        self.tabela.column("telefone", width=110)
-        self.tabela.column("data_cadastro",  width=120)
-
-        scroll_y = Scrollbar(frame_tabela, orient="vertical", command=self.tabela.yview)
-        self.tabela.configure(yscrollcommand=scroll_y.set)
-
-        self.tabela.pack(side=LEFT, fill=BOTH, expand=True)
-        scroll_y.pack(side=RIGHT, fill=Y) 
-
-        self.carregar_dados_especificos(self)
-
-    def carregar_dados_especificos(self):
-        
-        try:
-            with conexao.cursor() as cursor:
-                sql = 'select id, nome, idade, email, senha, telefone, data_cadastro  FROM cadastro WHERE id = %s'
-                cursor.execute(sql(id))
-
-                todos_usuarios = cursor.fetchall()
-
-                for usuario in todos_usuarios:
-                    self.tabela.insert("", "end", values=(
-                        usuario['id'],
-                        usuario['nome'],
-                        usuario['idade'],
-                        usuario['email'],
-                        usuario['senha'],
-                        usuario['telefone'],
-                        usuario['data_cadastro']
-                    ))
-
-        except Exception as e:
-            print(f'ERRO AO CARREGAR DADOS NA TABELA: {e}')
-
-    def voltar(self):
-        self.admin.destroy()
-
-    def salvar(self):
+     def salvar(self):
         nome = self.input_nome.get()
         idade = self.input_idade.get()
         email = self.input_email.get()
@@ -384,6 +343,11 @@ class janeladetalhes:
                             """
                 cursor.execute(sql, (nome, idade, email, senha, telefone, data))
                 conexao.commit()
+                messagebox.showinfo("Sucesso", "Usuário atualizado com sucesso!")
+
+                self.funcao_atualizar()
+                self.voltar()
+
         except Exception as e:
             print('ERRO AO ALTERAR: {e}')
 
