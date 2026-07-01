@@ -132,13 +132,10 @@ class teladePonto:
 
                 ultimo_registro = cursor.fetchone()
 
-
-                if ultimo_registro is None:
-                    tipo_atual = 'Entrada'
-                elif ultimo_registro['tipo'] == 'Saída':
+                if ultimo_registro is None or ultimo_registro['tipo'] == 'Saída':
                     tipo_atual = 'Entrada'
                 else:
-                    tipo_atual = 'Saida'
+                    tipo_atual = 'Saída'
 
                 sql_insert = '''
                     INSERT INTO registro_ponto (id_funcionario, data_hora, tipo) 
