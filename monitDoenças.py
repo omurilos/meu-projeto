@@ -10,21 +10,21 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class telainico:
- def __init__(self):
+  def __init__(self):
 
         self.pai = ctk.CTk()
         
         self.pai.title('')
         self.pai.geometry('1300x600')
-        self.pai.configure(fg_color='#FAFAFA')
+        self.pai.configure(fg_color="#FFFFFF")
         self.pai.resizable(False, False)
 
          #menu
 
-        frame_menu = ctk.CTkFrame(self.pai, fg_color='#D1CECE', corner_radius=15)
+        frame_menu = ctk.CTkFrame(self.pai, fg_color="#D1CECE", corner_radius=15)
         frame_menu.pack(side=LEFT, fill=Y, padx=3, pady=10)
 
-        ctk.CTkLabel(frame_menu, text='🌱 Monitoramento \n de Doenças', bg_color='#D1CECE', text_color='#383434', width=16, font=('Arial', 18, 'bold')).pack( padx=10, pady=30)
+        ctk.CTkLabel(frame_menu, text='🌱 Monitoramento \n de Doenças', bg_color="#D1CECE", text_color='#383434', width=16, font=('Arial', 18, 'bold')).pack( padx=10, pady=30)
 
         ctk.CTkButton(frame_menu, text='Tratamentos', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Ocorrências', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
@@ -32,12 +32,11 @@ class telainico:
         ctk.CTkButton(frame_menu, text='Relatórios', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Talhões', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack( padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Sair', fg_color="#F03333", text_color='white', command=self.fechar, width=6, font=('Arial', 18, 'bold')).pack(padx=10, pady=25)
-
+  
+         #dashboard
 
         frame_dash = ctk.CTkFrame(self.pai, fg_color='#D1CECE', corner_radius=15)
         frame_dash.pack(side=LEFT, fill=BOTH, expand=True, padx=10, pady=10)
-  
-         #dashboard
 
         ctk.CTkLabel(frame_dash, text='Dashboard', text_color='#383434', font=('Arial', 25, 'bold')).grid(column=0, row=0, padx=20, pady=20, sticky="w")
 
@@ -92,16 +91,42 @@ class telainico:
 
         #novas ocorrênciaas
 
-        ctk.CTkButton(frame_dash, text='Adicionar ocorrência +', fg_color="#F03333", text_color='white', command=self.fechar, width=8, font=('Arial', 20, 'bold')).grid(row=3, column=0, columnspan=3, pady=20)
+        ctk.CTkButton(frame_dash, text='Adicionar ocorrência +', fg_color="#F03333", text_color='white', command=self.novaocorrencias, width=8, font=('Arial', 20, 'bold')).grid(row=3, column=0, columnspan=3, pady=20)
 
 
         self.pai.mainloop()
 
 
+  def novaocorrencias(self):
+        ocorrencias(self.pai)
 
- def fechar(self):
+
+  def fechar(self):
         self.pai.destroy()
 
+
+
+
+class ocorrencias:
+     
+     def __init__(self, root_pai):
+          
+          self.filho = ctk.CTkToplevel(root_pai)
+          self.filho.title('+ Ocorrências')
+          self.filho.configure(fg_color='white')
+          self.filho.geometry('500x800')
+          self.filho.resizable(False, False)
+
+          self.filho.transient(root_pai)   
+          self.filho.lift()                
+          self.filho.focus_force()
+
+
+
+          frame_cabecalho = ctk.CTkFrame(self.filho, fg_color="#D1CECE", corner_radius=15)
+          frame_cabecalho.pack(side=LEFT, fill=Y, padx=3, pady=10)
+
+          ctk.CTkLabel(frame_cabecalho, text='Nova Ocorrência', bg_color="#D1CECE", text_color='#383434', width=16, font=('Arial', 18, 'bold')).pack( padx=10, pady=10)
   
 
          
