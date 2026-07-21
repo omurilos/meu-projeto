@@ -122,13 +122,33 @@ class ocorrencias:
           self.filho.focus_force()
 
 
+       #cabeçalho
 
-          frame_cabecalho = ctk.CTkFrame(self.filho, fg_color="#D1CECE", corner_radius=15)
-          frame_cabecalho.pack(side=LEFT, fill=Y, padx=3, pady=10)
+          frame_cabecalho = ctk.CTkFrame(self.filho, fg_color="#D1CECE", corner_radius=15, width=450, height=60)
+          frame_cabecalho.pack(pady=25)
+          frame_cabecalho.pack_propagate(False)
 
-          ctk.CTkLabel(frame_cabecalho, text='Nova Ocorrência', bg_color="#D1CECE", text_color='#383434', width=16, font=('Arial', 18, 'bold')).pack( padx=10, pady=10)
+          ctk.CTkLabel(frame_cabecalho, text='Nova Ocorrência', bg_color="#D1CECE", text_color='#383434', font=('Arial', 20, 'bold')).pack(expand=True)
   
+       #enserir informações
 
+          
+          frame_infos = ctk.CTkFrame(self.filho, fg_color="#D1CECE", corner_radius=15)
+          frame_infos.pack(padx=2, pady=25)
+
+          ctk.CTkLabel(frame_infos, text='Talhão', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=0,  padx=50,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color='black', fg_color='#FFFFFF', width=250 ).grid(column=1, row=0, padx=10, pady=30)
+
+          ctk.CTkLabel(frame_infos, text='Data', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=1,  padx=50,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color='black', fg_color='#FFFFFF', width=250 ).grid(column=1, row=1, padx=10, pady=30)
+
+          ctk.CTkLabel(frame_infos, text='Doença', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2,  padx=50,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color='black', fg_color='#FFFFFF', width=250 ).grid(column=1, row=2, padx=10, pady=30)
          
+          ctk.CTkLabel(frame_infos, text='Gravidade', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=3,  padx=50,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color='black', fg_color='#FFFFFF', width=250 ).grid(column=1, row=3, padx=10, pady=30)
+
+          ctk.CTkLabel(frame_infos, text='Área afetada', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=4,  padx=50,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color='black', fg_color='#FFFFFF', width=250 ).grid(column=1, row=4, padx=10, pady=30)
 
 telainico()
