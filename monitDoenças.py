@@ -28,7 +28,7 @@ class telainico:
 
         ctk.CTkButton(frame_menu, text='Tratamentos', fg_color='#F05933', text_color='white', width=15, command=self.telatratar, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Ocorrências', fg_color='#F05933', text_color='white', width=15, command=self.telaocorren, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
-        ctk.CTkButton(frame_menu, text='Inspeções', fg_color='#F05933', text_color='white',width=15, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
+        ctk.CTkButton(frame_menu, text='Inspeções', fg_color='#F05933', text_color='white',width=15, command=self.telainspensoes, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Relatórios', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack(padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Talhões', fg_color='#F05933', text_color='white', width=15, font=('Arial', 20, 'bold')).pack( padx=10, pady=10)
         ctk.CTkButton(frame_menu, text='Sair', fg_color="#F03333", text_color='white', command=self.pai.destroy, width=6, font=('Arial', 18, 'bold')).pack(padx=10, pady=25)
@@ -109,6 +109,10 @@ class telainico:
         ocorrencias(self.pai)
 
 
+  def telainspensoes(self):
+         inspencoes(self.pai)
+
+
 
 class novasocorrencias:
      
@@ -180,7 +184,7 @@ class tratamentos:
           self.filho = ctk.CTkToplevel(root_pai)
           self.filho.title('Tratamentos')
           self.filho.configure(fg_color="#FFFFFF")
-          self.filho.geometry('1000x500')
+          self.filho.geometry('950x500')
           
           
           self.filho.transient(root_pai)   
@@ -188,8 +192,8 @@ class tratamentos:
           self.filho.focus_force() 
 
 
-          frame_infos = ctk.CTkFrame(self.filho, width=975, height=500, fg_color="#D1CECE", corner_radius=18)
-          frame_infos.pack(padx=20, pady=(15, 5))
+          frame_infos = ctk.CTkFrame(self.filho, width=2005, height=500, fg_color="#D1CECE", corner_radius=18)
+          frame_infos.pack( pady=(15, 5))
           frame_infos.pack_propagate(False)
 
 
@@ -198,14 +202,14 @@ class tratamentos:
           ctk.CTkLabel(frame_infos, text='🔄 Ocorrências', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=1, padx=20, pady=10, sticky='w')
           ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=1, row=1, padx=10, pady=10)
 
-          ctk.CTkLabel(frame_infos, text='📦 Produto', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=2, row=1, padx=15, pady=5)
-          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=3, row=1, padx=15, pady=10, sticky='w')
+          ctk.CTkLabel(frame_infos, text='📦 Produto', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=2, row=1, padx=10, pady=5)
+          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=3, row=1, padx=10, pady=10, sticky='e')
 
-          ctk.CTkLabel(frame_infos, text='💧 Dose', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2, padx=15, pady=10)
-          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=1, row=2, padx=15, pady=10, sticky='w')
+          ctk.CTkLabel(frame_infos, text='💧 Dose', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2, padx=20, pady=10)
+          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=1, row=2, padx=10, pady=10, sticky='w')
 
-          ctk.CTkLabel(frame_infos, text='👨‍🌾 Responsavel', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=2, row=2, padx=15, pady=10)
-          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=3, row=2, padx=15, pady=10, sticky='w')    
+          ctk.CTkLabel(frame_infos, text='👨‍🌾 Responsavel', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=2, row=2, padx=10, pady=10)
+          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=270 ).grid(column=3, row=2, padx=10, pady=10, sticky='e')    
 
           
           
@@ -218,11 +222,11 @@ class tratamentos:
           tabela.heading('area', text='Área')
                   
           tabela.column('talhao', width=200)
-          tabela.column('doenca', width=200)
+          tabela.column('doenca', width=250)
           tabela.column('cultura', width=200)
-          tabela.column('area', width=200)
+          tabela.column('area', width=210)
           
-          tabela.grid(column=0, columnspan=4, row=3, padx=20, pady=20, sticky='nsew')
+          tabela.grid(column=0, columnspan=4, row=3, padx=13, pady=20, sticky='nsew')
 
 
           frame_botoes = ctk.CTkFrame(self.filho, width=900, fg_color="#D1CECE", corner_radius=8)
@@ -294,6 +298,51 @@ class ocorrencias:
           ctk.CTkButton(frame_botoes, text='🧹 Excluir', text_color="#383838", fg_color="#868686", width=180).pack(padx=50, side='left' )
           ctk.CTkButton(frame_botoes, text='💾 Pesquisar', text_color="#383838", fg_color="#F05933", width=180).pack(padx=50, side='left' )
           ctk.CTkButton(frame_botoes, text='⬅️ Voltar', text_color="#383838", fg_color="#868686", width=180, command=self.filho.destroy).pack(padx=50, side='left')
+
+
+
+class inspencoes:
+     def __init__(self, root_pai):
+     
+          self.filho = ctk.CTkToplevel(root_pai)
+          self.filho.title('Inspeções')
+          self.filho.configure(fg_color="#FFFFFF")
+          self.filho.geometry('650x430')
+                                 
+                                 
+          self.filho.transient(root_pai)   
+          self.filho.lift()                
+          self.filho.focus_force() 
+
+
+          frame_infos = ctk.CTkFrame(self.filho, width=975, height=500, fg_color="#D1CECE", corner_radius=18)
+          frame_infos.pack(padx=20, pady=(15, 5))
+          frame_infos.pack_propagate(False)
+
+
+          ctk.CTkLabel(frame_infos, text='🔎 Nova Inspeção', bg_color="#D1CECE", width=50, text_color='#F05933', font=('Arial', 30, 'bold')).grid(column=0, columnspan=4, row=0, padx=10, pady=20)
+
+          ctk.CTkLabel(frame_infos, text='🌱 Talhão', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=1, padx=25, pady=10, sticky="w")
+          ctk.CTkComboBox(frame_infos, values=['1', '2', '3', '4'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=1, padx=180, pady=10, sticky="w")
+                    
+          ctk.CTkLabel(frame_infos, text='📅 Data', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2,  padx=25,  pady=10, sticky="w")
+          ctk.CTkEntry(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=2, padx=180, pady=10, sticky="w")
+                    
+          ctk.CTkLabel(frame_infos, text='👨‍🌾 Responsável', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=3,  padx=25,  pady=10, sticky="w")
+          ctk.CTkComboBox(frame_infos, values=['****', '****', 'teste'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=3, padx=180, pady=10, sticky="w")
+
+          ctk.CTkLabel(frame_infos, text='💬 Observações', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=4, padx=25, pady=5, sticky="w")
+          ctk.CTkTextbox(frame_infos, text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250, height=100 ).grid(column=0, row=4, padx=180, pady=10, sticky="w")
+
+                    
+
+          frame_botoes = ctk.CTkFrame(self.filho, width=600, height=50, fg_color="#D1CECE", corner_radius=10)
+          frame_botoes.pack(pady=4)
+          frame_botoes.pack_propagate(False)
+        
+          ctk.CTkButton(frame_botoes, text='🧹 Excluir', text_color="#383838", fg_color="#868686", width=120).pack(padx=40, side='left' )
+          ctk.CTkButton(frame_botoes, text='💾 Pesquisar', text_color="#383838", fg_color="#F05933", width=120).pack(padx=40, side='left' )
+          ctk.CTkButton(frame_botoes, text='⬅️ Voltar', text_color="#383838", fg_color="#868686", width=120, command=self.filho.destroy).pack(padx=40, side='left')
 
 
 
