@@ -117,7 +117,7 @@ class novasocorrencias:
           self.filho = ctk.CTkToplevel(root_pai)
           self.filho.title('+ Ocorrências')
           self.filho.configure(fg_color="#FFFFFF")
-          self.filho.geometry('300x500')
+          self.filho.geometry('620x610')
           self.filho.resizable(False, False)
 
           self.filho.transient(root_pai)   
@@ -125,7 +125,7 @@ class novasocorrencias:
           self.filho.focus_force()  
 
           
-          frame_infos = ctk.CTkFrame(self.filho, width=500, height=500, fg_color="#D1CECE", corner_radius=18)
+          frame_infos = ctk.CTkFrame(self.filho, width=880, height=680, fg_color="#D1CECE", corner_radius=18)
           frame_infos.pack(padx=20, pady=(35, 5))
           frame_infos.pack_propagate(False)
 
@@ -162,9 +162,10 @@ class novasocorrencias:
 
          #Botões  
 
-          frame_botoes = ctk.CTkFrame(self.filho, width=200, height=4, fg_color="#D1CECE", corner_radius=8)
+          frame_botoes = ctk.CTkFrame(self.filho, width=530, height=40, fg_color="#D1CECE", corner_radius=8)
           frame_botoes.pack(pady=(1, 5))
           frame_botoes.pack_propagate(False)
+          
 
           ctk.CTkButton(frame_botoes, text='🧹 Limpar', text_color="#383838", fg_color="#868686", width=165).pack(padx=10, side='left' )
           ctk.CTkButton(frame_botoes, text='💾 Salvar', text_color="#383838", fg_color="#F05933", width=165).pack(padx=10, side='left' )
@@ -241,7 +242,7 @@ class ocorrencias:
           self.filho = ctk.CTkToplevel(root_pai)
           self.filho.title('Tratamentos')
           self.filho.configure(fg_color="#FFFFFF")
-          self.filho.geometry('1000x500')
+          self.filho.geometry('900x460')
                             
                             
           self.filho.transient(root_pai)   
@@ -254,16 +255,16 @@ class ocorrencias:
           frame_infos.pack_propagate(False)
 
 
-          ctk.CTkLabel(frame_infos, text='🦠 Ocorrências', bg_color="#D1CECE", width=50, text_color='#F05933', font=('Arial', 30, 'bold')).grid(column=0, columnspan=2, row=0, padx=20, pady=20)
+          ctk.CTkLabel(frame_infos, text='🦠 Ocorrências', bg_color="#D1CECE", width=50, text_color='#F05933', font=('Arial', 30, 'bold')).grid(column=0, columnspan=4, row=0, padx=10, pady=20)
 
-          ctk.CTkLabel(frame_infos, text='🌱 Talhão', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=1,  padx=10,  pady=10, sticky="w")
-          ctk.CTkComboBox(frame_infos, values=['1', '2', '3', '4'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=1, row=1, padx=1, pady=10, sticky="w")
+          ctk.CTkLabel(frame_infos, text='🌱 Talhão', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=1, padx=25, pady=10, sticky="w")
+          ctk.CTkComboBox(frame_infos, values=['1', '2', '3', '4'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=1, padx=175, pady=10, sticky="w")
           
-          ctk.CTkLabel(frame_infos, text='🦠 Doença', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2,  padx=10,  pady=10, sticky="w")
-          ctk.CTkComboBox(frame_infos, values=['Míldio', 'Oídio', 'Antracnose', 'Ferrugem'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=1, row=2, padx=1, pady=10, sticky="w")
+          ctk.CTkLabel(frame_infos, text='🦠 Doença', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=2,  padx=25,  pady=10, sticky="w")
+          ctk.CTkComboBox(frame_infos, values=['Míldio', 'Oídio', 'Antracnose', 'Ferrugem'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=2, padx=175, pady=10, sticky="w")
           
-          ctk.CTkLabel(frame_infos, text='⚠️ Gravidade', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=3,  padx=10,  pady=10, sticky="w")
-          ctk.CTkComboBox(frame_infos, values=['Baixa', 'Média', 'Alta'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=1, row=3, padx=1, pady=10, sticky="w")
+          ctk.CTkLabel(frame_infos, text='⚠️ Gravidade', text_color="#383838", font=('Arial', 18, 'bold')).grid(column=0, row=3,  padx=25,  pady=10, sticky="w")
+          ctk.CTkComboBox(frame_infos, values=['Baixa', 'Média', 'Alta'], text_color="#383838", fg_color='#FFFFFF', border_color="#CACACA", width=250).grid(column=0, row=3, padx=175, pady=10, sticky="w")
           
 
           colunas = ('talhao', 'doenca', 'gravidade', 'data', 'area', 'status')
@@ -283,16 +284,16 @@ class ocorrencias:
           tabela.column('area', width=150)
           tabela.column('status', width=150)
                   
-          tabela.grid(column=0, columnspan=4, row=4, padx=20, pady=20, sticky='nsew')
+          tabela.grid(column=0, columnspan=4, row=4, padx=15, pady=20, sticky='nsew')
         
         
-          frame_botoes = ctk.CTkFrame(self.filho, width=700, fg_color="#D1CECE", corner_radius=8)
+          frame_botoes = ctk.CTkFrame(self.filho, width=860, height=50, fg_color="#D1CECE", corner_radius=10)
           frame_botoes.pack(pady=4)
           frame_botoes.pack_propagate(False)
         
-          ctk.CTkButton(frame_botoes, text='🧹 Excluir', text_color="#383838", fg_color="#868686", width=200).pack(padx=20, side='left' )
-          ctk.CTkButton(frame_botoes, text='💾 Pesquisar', text_color="#383838", fg_color="#F05933", width=200).pack(padx=20, side='left' )
-          ctk.CTkButton(frame_botoes, text='⬅️ Voltar', text_color="#383838", fg_color="#868686", width=200, command=self.filho.destroy).pack(padx=20, side='left')
+          ctk.CTkButton(frame_botoes, text='🧹 Excluir', text_color="#383838", fg_color="#868686", width=180).pack(padx=50, side='left' )
+          ctk.CTkButton(frame_botoes, text='💾 Pesquisar', text_color="#383838", fg_color="#F05933", width=180).pack(padx=50, side='left' )
+          ctk.CTkButton(frame_botoes, text='⬅️ Voltar', text_color="#383838", fg_color="#868686", width=180, command=self.filho.destroy).pack(padx=50, side='left')
 
 
 
